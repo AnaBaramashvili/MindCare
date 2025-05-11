@@ -1,0 +1,128 @@
+{% extends "layout/dashboard_base.html" %}
+
+{% block content %}
+<div class="row g-4">
+
+  
+  <div class="col-md-6">
+
+    
+    <div class="card p-3 text-center mb-3">
+      <h6>BMI</h6>
+      <h4 class="text-primary">
+        {{ bmi }}
+        <small>
+          (
+          {% if bmi < 18.5 %}
+            Underweight
+          {% elif 18.5 <= bmi <= 24.9 %}
+            Normal
+          {% elif 25 <= bmi < 30 %}
+            Overweight
+          {% else %}
+            Obese
+          {% endif %}
+          )
+        </small>
+      </h4>
+    </div>
+
+    
+    <div class="row g-3 mb-3">
+      <div class="col-6">
+        <div class="card p-3 text-center">
+          <h6>Mental Health Score</h6>
+          <h4 class="text-success">
+            {{ health_scores[-1] if health_scores else 'N/A' }}/100
+          </h4>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card p-3 text-center">
+          <h6>Last Entry</h6>
+          <h5 class="text-dark">
+            {{ logs[-1].date.strftime('%Y-%m-%d') if logs else 'No entry yet' }}
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="card p-4">
+      <h6 class="text-primary fw-bold mb-3">Daily Health Log</h6>
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="date" value="{{ date.today().strftime('%Y-%m-%d') }}">
+
+        <div class="mb-3">
+          {{ form.sleep_hours.label(class="form-label") }}
+          {{ form.sleep_hours(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.exercise_minutes.label(class="form-label") }}
+          {{ form.exercise_minutes(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-pink") }}
+      </form>
+    </div>
+
+  </div>
+
+  
+  <div class="col-md-6">
+    <div class="card p-4 mb-3">
+      <h6 class="text-primary fw-bold mb-3">Mental Health Score Trend</h6>
+      <canvas id="healthChart"></canvas>
+    </div>
+    {% if show_welcome %}
+      <div class="custom-alert custom-alert-success alert-dismissible fade show" role="alert">
+       <i class="fas fa-heartbeat"></i>
+        <span>Welcome to MindCare! Log your first entry to begin tracking your health journey.</span>
+      </div>
+    {% endif %}
+
+    
+    {% if logs and  not alert_sleep and not alert_exercise %}
+      <div class="custom-alert custom-alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>
+        <span>Great job! You're on track with your sleep and exercise goals this week. Keep it up!</span>
+      </div>
+    {% endif %}
+
+    
+    {% if alert_sleep %}
+      <div class="custom-alert custom-alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-moon"></i>
+        <span>You're averaging less than 6 hours of sleep. Try to get more rest!</span>
+      </div>
+    {% endif %}
+
+    
+    {% if alert_exercise %}
+      <div class="custom-alert custom-alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-running"></i>
+        <span>You haven’t exercised much this week. Aim for at least 2 active days!</span>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+  window.chartData = {
+    labels: {{ formatted_dates | tojson | safe }},
+    scores: {{ health_scores | tojson | safe }}
+  };
+</script>
+
+
+<script src="{{ url_for('static', filename='js/chart.js') }}"></script>
+{% endblock %}
+

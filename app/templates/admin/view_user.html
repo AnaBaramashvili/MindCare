@@ -1,0 +1,74 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">User Details</h2>
+
+  <div class="card p-4 mb-4">
+    <h5>User Info</h5>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+  </div>
+
+  {% if bmi %}
+  <div class="card p-4 mb-4">
+    <h5>BMI Info</h5>
+    <ul class="mb-0">
+      <li><strong>Age:</strong> {{ bmi.age }}</li>
+      <li><strong>Gender:</strong> {{ bmi.gender }}</li>
+      <li><strong>Height:</strong> {{ bmi.height }} cm</li>
+      <li><strong>Weight:</strong> {{ bmi.weight }} kg</li>
+      <li><strong>BMI Score:</strong> 
+        {% if bmi.height and bmi.weight %}
+          {% set height_m = bmi.height / 100 %}
+          {% set bmi_score = (bmi.weight / (height_m * height_m)) | round(2) %}
+          {{ bmi_score }}
+          <small>
+            (
+            {% if bmi_score < 18.5 %}Underweight
+            {% elif 18.5 <= bmi_score <= 24.9 %}Normal
+            {% elif 25 <= bmi_score < 30 %}Overweight
+            {% else %}Obese
+            {% endif %}
+            )
+          </small>
+        {% else %}
+          N/A
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  {% else %}
+    <div class="alert alert-warning">No BMI data available for this user.</div>
+  {% endif %}
+
+  <div class="card p-4">
+    <h5 class="mb-3">Health Logs</h5>
+    {% if logs %}
+    <table class="table table-bordered table-sm">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Sleep Hours</th>
+          <th>Exercise Minutes</th>
+          <th>Health Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ log.sleep_hours }}</td>
+          <td>{{ log.exercise_minutes }}</td>
+          <td>{{ log.health_score }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="text-muted">No health logs submitted yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

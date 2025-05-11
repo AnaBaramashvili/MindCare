@@ -1,0 +1,75 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+  <div class="w-100" style="max-width: 400px;">
+    <h2 class="text-center mb-4">Create Your MindCare Account</h2>
+    
+    <form method="POST" action="{{ url_for('auth_bp.register') }}">
+      {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        {{ form.username(class="form-control", placeholder="Username") }}
+        {% for error in form.username.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.email(class="form-control", placeholder="Email") }}
+        {% for error in form.email.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.password(class="form-control", placeholder="Password") }}
+        {% for error in form.password.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.confirm_password(class="form-control", placeholder="Confirm Password") }}
+        {% for error in form.confirm_password.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.age(class="form-control", placeholder="Age") }}
+        {% for error in form.age.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.height(class="form-control", placeholder="Height (cm)") }}
+        {% for error in form.height.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.weight(class="form-control", placeholder="Weight (kg)") }}
+        {% for error in form.weight.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.gender(class="form-control") }}
+        {% for error in form.gender.errors %}
+          <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+      <div class="text-center mt-3">
+        <small>Already have an account? <a href="{{ url_for('auth_bp.login') }}">Log in</a></small>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

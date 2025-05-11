@@ -1,0 +1,108 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+  }
+  
+  #sidebar {
+    width: 220px;
+    min-height: 100vh;
+    flex-shrink: 0;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .card h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #777;
+  }
+  
+  .card h4, .card h5 {
+    margin: 0;
+  }
+  
+  #healthChart {
+    max-height: 260px;
+  }
+  
+  .btn-pink {
+    background-color: #ff4fab;
+    color: white;
+    font-weight: bold;
+    border-radius: 25px;
+  }
+  
+  .btn-pink:hover {
+    background-color: #e63c96;
+  }
+  
+  @media (max-width: 768px) {
+    .col-md-6 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  
+  .custom-alert {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.4s ease-in-out;
+  }
+  
+  .custom-alert i {
+    font-size: 1.2rem;
+  }
+  
+  .custom-alert .btn-close {
+    margin-left: auto;
+    opacity: 0.6;
+  }
+  
+  .custom-alert .btn-close:hover {
+    opacity: 1;
+  }
+  
+  
+  .custom-alert-success {
+    border-left: 5px solid #4bb543;
+    background-color: #f0fff4;
+    color: #2f8f46;
+  }
+  
+  .custom-alert-success i {
+    color: #4bb543;
+  }
+  
+  
+  .custom-alert-warning {
+    border-left: 5px solid #ffb100;
+    background-color: #fff9eb;
+    color: #a86500;
+  }
+  
+  .custom-alert-warning i {
+    color: #ffb100;
+  }
+  
+  
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

@@ -1,0 +1,128 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Edit User</h2>
+
+  
+  <form method="POST" autocomplete="off">
+    <div class="mb-3">
+      <label>Username</label>
+      <input type="text" name="username" class="form-control" value="{{ user.username }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Role</label>
+      <select name="role" class="form-control">
+        <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>New Password</label>
+      <input type="password" name="password" class="form-control" autocomplete="new-password">
+    </div>
+    <div class="mb-3">
+      <label>Confirm New Password</label>
+      <input type="password" name="confirm_password" class="form-control" autocomplete="new-password">
+    </div>
+
+    {% if bmi %}
+    <hr>
+    <h4>BMI Info</h4>
+    <div class="mb-3">
+      <label>Age</label>
+      <input type="number" name="age" class="form-control" value="{{ bmi.age }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Gender</label>
+      <select name="gender" class="form-control" required>
+        <option value="female" {% if bmi.gender == 'female' %}selected{% endif %}>Female</option>
+        <option value="male" {% if bmi.gender == 'male' %}selected{% endif %}>Male</option>
+        <option value="other" {% if bmi.gender == 'other' %}selected{% endif %}>Other</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Height (cm)</label>
+      <input type="number" step="0.1" name="height" class="form-control" value="{{ bmi.height }}" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Weight (kg)</label>
+      <input type="number" step="0.1" name="weight" class="form-control" value="{{ bmi.weight }}" required>
+    </div>
+    {% else %}
+      <p class="text-muted">No BMI record found for this user.</p>
+    {% endif %}
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <a href="{{ url_for('admin_bp.user_list') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+
+  
+  <hr>
+  <h4 class="mt-5">Health Logs</h4>
+  {% if logs %}
+    <table class="table table-bordered table-sm mt-3">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Sleep Hours</th>
+          <th>Exercise Minutes</th>
+          <th>Health Score</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td>{{ log.date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ log.sleep_hours }}</td>
+          <td>{{ log.exercise_minutes }}</td>
+          <td>{{ log.health_score }}</td>
+          <td>
+            <a href="{{ url_for('admin_bp.edit_log', user_id=user.id, log_id=log.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="{{ url_for('admin_bp.delete_log', user_id=user.id, log_id=log.id) }}" method="POST" style="display:inline;">
+              <button class="btn btn-sm btn-danger" onclick="return confirm('Delete this log?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-muted">No health logs available for this user.</p>
+  {% endif %}
+
+  
+  <hr>
+  <h5 class="mt-4">Add New Log</h5>
+  <form action="{{ url_for('admin_bp.add_log', user_id=user.id) }}" method="POST">
+    {{ form.hidden_tag() }}
+    <div class="row">
+      <div class="col">
+        {{ form.date.label }} {{ form.date(class="form-control") }}
+      </div>
+      <div class="col">
+        {{ form.sleep_hours.label }} {{ form.sleep_hours(class="form-control") }}
+      </div>
+      <div class="col">
+        {{ form.exercise_minutes.label }} {{ form.exercise_minutes(class="form-control") }}
+      </div>
+      <div class="col">
+        <label>&nbsp;</label>
+        <button type="submit" class="btn btn-success form-control">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
