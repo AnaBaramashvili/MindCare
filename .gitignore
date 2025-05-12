@@ -1,7 +1,21 @@
-venv/
-*.pyc
+# Python caches
 __pycache__/
+*.pyc
+
+# Virtual envs
+venv/
+env/
+
+# Flask instance folder & env files
 instance/
-*.db
 .env
-docker-compose.override.yml
+.flaskenv
+
+# Database & Docker artifacts
+*.db
+*.sqlite3
+*.log
+*.pid
+
+# OS/filesystem cruft
+.DS_Store

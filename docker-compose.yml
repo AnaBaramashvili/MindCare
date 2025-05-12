@@ -1,21 +1,38 @@
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mindcare
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
+
+services:
   web:
     build: .
+    image: your-dockerhub-username/mindcare-web:latest
+    container_name: mindcare_web
+    restart: unless-stopped
+    env_file:
+      - .env     
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    ports:
+      - "5000:5000"       
     depends_on:
       - db
+    networks:
+      - mindcare_net
+
+  db:
+    image: postgres:15
+    container_name: mindcare_db
+    restart: unless-stopped
     env_file:
-      - .env    # see next section
-    ports:
-      - "5000:5000"
+      - .env    
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./snapshot.sql:/docker-entrypoint-initdb.d/snapshot.sql
+    networks:
+      - mindcare_net
 
 volumes:
-  pgdata:
+  pgdata:                # persists your database between restarts
+
+networks:
+  mindcare_net:          # isolated bridge network
+    driver: bridge

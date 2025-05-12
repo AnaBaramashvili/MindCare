@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app.dal import get_bmi_by_user_id, update_user_profile
-from app.extensions import db
+from app.extensions import db, csrf
 
 user_bp = Blueprint('user_bp', __name__)
 
 @user_bp.route('/profile', methods=['GET', 'POST'])
+@csrf.exempt
 @login_required
 def profile():
     user = current_user
